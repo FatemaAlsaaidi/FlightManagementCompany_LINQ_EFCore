@@ -76,3 +76,22 @@ passengers and airports — implemented using layered architecture, EF Core, Rep
 # Mapping
 ![](img/Mapping.png)
 
+# Normlization
+**Step 1 — First Normal Form (1NF)**
+Becouse of the following reasons, the database is already in 1NF:
+- Each table has a primary key.
+- Each column contains atomic values.
+- No repeating groups are visible.
+
+**Step 2 — Second Normal Form (2NF)**
+The database is already in 2NF because:
+- All non-key attributes are fully functionally dependent on the primary key.
+- There are no partial dependencies of any column on the primary key.
+- All non-key attributes are dependent on the entire primary key.
+- There are no transitive dependencies.
+
+**Step 3 — Third Normal Form (3NF)**
+The database is already in 3NF because:
+- There are no transitive dependencies.
+- All non-key attributes are dependent only on the primary key.
+
