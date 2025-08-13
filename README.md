@@ -70,13 +70,6 @@ passengers and airports — implemented using layered architecture, EF Core, Rep
 • Type (string) 
 • Notes (string) 
 
-### Relationships (high level): 
-- Airport 1..* Route (as origin and destination) — Route has two FKs to Airport. 
-- Route 1..* Flight 
-- Aircraft 1..* Flight 
-- Flight .. CrewMember via FlightCrew (many-to-many) 
-- Passenger 1..* Booking 
-- Booking 1..* Ticket (one booking could book multiple segments/flights) 
-- Flight 1..* Ticket 
-- Ticket 1..* Baggage 
-- Aircraft 1..* AircraftMaintenance
+# ERD
+![](img/ERD.png)
+
