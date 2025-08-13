@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightManagementCompany_LINQ_EFCore", "FlightManagementCompany_LINQ_EFCore.csproj", "{61BB52F9-F313-4BFF-B5D3-7AA35B677E58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61BB52F9-F313-4BFF-B5D3-7AA35B677E58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61BB52F9-F313-4BFF-B5D3-7AA35B677E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61BB52F9-F313-4BFF-B5D3-7AA35B677E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61BB52F9-F313-4BFF-B5D3-7AA35B677E58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B40B7D1C-9630-493D-9248-3A5EE0B0A42B}
+	EndGlobalSection
+EndGlobal
