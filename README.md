@@ -73,3 +73,6 @@ passengers and airports — implemented using layered architecture, EF Core, Rep
 # ERD
 ![](img/ERD.png)
 
+# Mapping
+![](img/Mapping.png)
+
