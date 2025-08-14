@@ -11,5 +11,11 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public int BaggageId { get; set; }
         public decimal WeightKg { get; set; }
         public string TagNumber { get; set; }
+
+        public int TicketId { get; set; } // Foreign key to Ticket table
+
+        // navigation to ticket
+        public Ticket Ticket { get; set; }
+
     }
 }
