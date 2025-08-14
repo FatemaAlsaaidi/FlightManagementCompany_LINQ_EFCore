@@ -14,5 +14,9 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public string PassportNo { get; set; } // Unique passport number
         public string Nationality { get; set; } 
         public DateOnly DOB { get; set; } // Date of birth of the passenger
+
+        // Navigation to Booking
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
     }
 }
