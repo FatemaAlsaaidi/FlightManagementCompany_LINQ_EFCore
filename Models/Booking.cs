@@ -12,5 +12,13 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public string BookingRef { get; set; }
         public DateTime BookingDate { get; set; }
         public string status { get; set; }
+        public int PassengerId { get; set; } // Foreign key to Passenger table
+
+        // navigation to  passenger
+        public Passenger Passenger { get; set; }
+
+        // navigation to tickets
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
     }
 }
