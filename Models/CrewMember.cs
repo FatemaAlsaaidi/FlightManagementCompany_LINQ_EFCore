@@ -13,7 +13,16 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
 
         public string Lname { get; set; }
 
-        public string Role { get; set; } // e.g., Pilot, Co-Pilot, Flight Attendant
+        public CrewRole Role { get; set; }  // use enum here
+                                            
         public string LicenseNo { get; set; } // For pilots, the license number
+    }
+    // Enum for crew roles
+
+    public enum CrewRole
+    {
+        Pilot,
+        CoPilot,
+        FlightAttendant
     }
 }
