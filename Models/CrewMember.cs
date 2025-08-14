@@ -16,6 +16,9 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public CrewRole Role { get; set; }  // use enum here
                                             
         public string LicenseNo { get; set; } // For pilots, the license number
+
+        // navigation property to FlightCrew
+        public ICollection<FlightCrew> FlightCrews { get; set; } = new List<FlightCrew>();
     }
     // Enum for crew roles
 
