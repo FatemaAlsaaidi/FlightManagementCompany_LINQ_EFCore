@@ -12,5 +12,12 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public string TailNumber { get; set; }
         public string Model { get; set; }
         public int Capacity { get; set; }
+
+        // navigation to flight 
+        public ICollection<Flight> Flights { get; set; } = new List<Flight>();
+
+        // navigation to AircraftMaintenance
+        public ICollection<AircraftMaintenance> AircraftMaintenances { get; set; } = new List<AircraftMaintenance>();
+
     }
 }
