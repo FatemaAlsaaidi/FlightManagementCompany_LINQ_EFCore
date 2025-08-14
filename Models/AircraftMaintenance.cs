@@ -12,5 +12,9 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public DateTime MaintenanceDate { get; set; }
         public string Type { get; set; } // e.g., "Routine", "Repair", "Inspection"
         public string Note { get; set; } // Additional notes about the maintenance
+        public int AircraftId { get; set; } // Foreign key to Aircraft table
+
+        // navigation property to Aircraft
+        public Aircraft Aircraft { get; set; } 
     }
 }
