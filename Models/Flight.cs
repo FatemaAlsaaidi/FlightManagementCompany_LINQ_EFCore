@@ -13,5 +13,6 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public DateTime DepartureUtc { get; set; }
         public DateTime ArrivalUtc { get; set; } // UTC time of arrival
         public string Status { get; set; } // e.g., "Scheduled", "Delayed", "Cancelled"
+        // coolection navigation to route 
     }
 }
