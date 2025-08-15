@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class FlightCrew
+    public class FlightCrew : IFlightCrew
     {
         // database injection
         private readonly FlightDatabaseContext _context;
@@ -30,7 +30,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // Add a new flight crew
         public void AddFlightCrew(Models.FlightCrew flightCrew)
         {
-            
+
             _context.FlightCrews.Add(flightCrew);
             _context.SaveChanges();
         }
@@ -38,7 +38,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // Update an existing flight crew
         public void UpdateFlightCrew(Models.FlightCrew flightCrew)
         {
-         
+
             _context.FlightCrews.Update(flightCrew);
             _context.SaveChanges();
         }

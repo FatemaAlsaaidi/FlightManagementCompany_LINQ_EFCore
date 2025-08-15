@@ -7,7 +7,7 @@ using FlightManagementCompany_LINQ_EFCore.Models; // Ensure this namespace match
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class AirportRepo
+    public class AirportRepo : IAirportRepo
     {
         // database injection 
         private readonly FlightDatabaseContext _context;
@@ -48,7 +48,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // 5. Delete
         public void DeleteAirport(Airport airport)
         {
-           
+
             _context.Airports.Remove(airport);
             _context.SaveChanges();
 

@@ -7,7 +7,7 @@ using FlightManagementCompany_LINQ_EFCore.Models; // Ensure this namespace match
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class CrewMemberRepo
+    public class CrewMemberRepo : ICrewMemberRepo
     {
         // database injection
         private readonly FlightDatabaseContext _context;
@@ -42,7 +42,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // Update an existing crew member
         public void UpdateCrewMember(CrewMember crewMember)
         {
-            
+
             _context.CrewMembers.Update(crewMember);
             _context.SaveChanges();
         }
@@ -50,7 +50,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // Delete a crew member
         public void DeleteCrewMember(CrewMember crewMember)
         {
-            
+
             _context.CrewMembers.Remove(crewMember);
             _context.SaveChanges();
         }
@@ -71,7 +71,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // 7. GetAvailableCrew(DateTime dep) 
         public IEnumerable<CrewMember> GetAvailableCrew(DateTime dep)
         {
-           
+
             return _context.CrewMembers
                 .Where(cm => !cm.FlightCrews.Any(fc => fc.Flight.DepartureUtc <= dep && fc.Flight.ArrivalUtc >= dep))
                 .ToList();

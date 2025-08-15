@@ -7,7 +7,7 @@ using FlightManagementCompany_LINQ_EFCore.Models;
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class AircraftRepo
+    public class AircraftRepo : IAircraftRepo
     {
         // inject the DbContext
         private readonly FlightDatabaseContext _context;

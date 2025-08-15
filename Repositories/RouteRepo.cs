@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class RouteRepo
+    public class RouteRepo : IRouteRepo
     {
         // Database injection
         private readonly FlightDatabaseContext _context;

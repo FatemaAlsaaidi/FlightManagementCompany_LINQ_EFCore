@@ -7,7 +7,7 @@ using FlightManagementCompany_LINQ_EFCore.Models; // Ensure this namespace match
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class BaggageRepo
+    public class BaggageRepo : IBaggageRepo
     {
         // database injection
         private readonly FlightDatabaseContext _context;
@@ -48,10 +48,10 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // Delete
         public void DeleteBaggage(Baggage baggage)
         {
-           
+
             _context.Baggages.Remove(baggage);
             _context.SaveChanges();
-            
+
         }
 
         /// // ================= Entity-Specific Helpers ===================

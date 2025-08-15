@@ -8,7 +8,7 @@ using FlightManagementCompany_LINQ_EFCore.Models; // Ensure this namespace match
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class AircraftMaintenanceRepo
+    public class AircraftMaintenanceRepo : IAircraftMaintenanceRepo
     {
         // Constructor database Injection 
         private readonly FlightDatabaseContext _context;
@@ -18,10 +18,10 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         }
 
         // 1. GetAll()
-        public List<AircraftMaintenance> GetAllAircrafMaintenances() 
+        public List<AircraftMaintenance> GetAllAircrafMaintenances()
         {
             return _context.AircraftMaintenances.ToList();
-           
+
         }
 
         // 2. GetById(int id)
@@ -35,25 +35,25 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         {
             _context.AircraftMaintenances.Add(maintenance);
             _context.SaveChanges();
-          
+
         }
 
         // 4. Update(entity)
         public void UpdateAircraftMaintenance(AircraftMaintenance maintenance)
         {
-          
+
             _context.AircraftMaintenances.Update(maintenance);
             _context.SaveChanges();
-              
+
         }
 
         // 5. Delete
         public void DeleteAircraftMaintenance(AircraftMaintenance maintenance)
         {
-           
+
             _context.AircraftMaintenances.Remove(maintenance);
             _context.SaveChanges();
-        
+
         }
 
         /// // ================= Entity-Specific Helpers ===================
@@ -66,7 +66,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
                            .ToList();
         }
 
-       
+
 
 
 

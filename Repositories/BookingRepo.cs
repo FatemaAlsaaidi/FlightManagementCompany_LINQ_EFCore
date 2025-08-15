@@ -7,7 +7,7 @@ using FlightManagementCompany_LINQ_EFCore.Models; // Ensure this namespace match
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class BookingRepo
+    public class BookingRepo : IBookingRepo
     {
         // database injection
         private readonly FlightDatabaseContext _context;
@@ -45,10 +45,10 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // Delete a booking by ID
         public void DeleteBooking(Booking booking)
         {
-            
-                _context.Bookings.Remove(booking);
-                _context.SaveChanges();
-            
+
+            _context.Bookings.Remove(booking);
+            _context.SaveChanges();
+
         }
 
         /// =============== Extra Methods ===============

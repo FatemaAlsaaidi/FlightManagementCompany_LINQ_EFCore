@@ -7,7 +7,7 @@ using FlightManagementCompany_LINQ_EFCore.Models;
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class TicketRepo
+    public class TicketRepo : ITicketRepo
     {
 
         // Database injection   

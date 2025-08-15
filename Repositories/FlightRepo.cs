@@ -7,7 +7,7 @@ using FlightManagementCompany_LINQ_EFCore.Models;
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class FlightRepo
+    public class FlightRepo : IFlightRepo
     {
         // Database injection
 
@@ -45,10 +45,10 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         // Delete a Flight
         public void DeleteFlight(Flight flight)
         {
-           
-                _context.Flights.Remove(flight);
-                _context.SaveChanges();
-            
+
+            _context.Flights.Remove(flight);
+            _context.SaveChanges();
+
         }
 
         /// ====================== entity Helpers methods ================
