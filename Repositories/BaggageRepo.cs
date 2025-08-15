@@ -53,5 +53,16 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             _context.SaveChanges();
             
         }
+
+        /// // ================= Entity-Specific Helpers ===================
+        // 6. GetBaggagesByTicketId(int ticketId)
+        public List<Baggage> GetBaggagesByTicketId(int ticketId)
+        {
+            return _context.Baggages
+                .Where(b => b.TicketId == ticketId)
+                .ToList();
+        }
+
+
     }
 }
