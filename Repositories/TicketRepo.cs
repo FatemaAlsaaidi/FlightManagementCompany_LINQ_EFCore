@@ -47,6 +47,24 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             _context.SaveChanges();
         }
 
+        /// ====================== enetity Helpers methods 
+        // 6. GetTicketsByBooking(string bookingRef)
+        public IEnumerable<Ticket> GetTicketsByBooking(string bookingRef)
+        {
+            return _context.Tickets
+                .Where(t => t.Booking != null && t.Booking.BookingRef == bookingRef)
+                .ToList();
+
+        }
+        // 7. GetTicketsByPassenger(int passengerId)
+        public IEnumerable<Ticket> GetTicketsByPassenger(int passengerId)
+        {
+            return _context.Tickets
+                .Where(t => t.Booking != null && t.Booking.PassengerId == passengerId)
+                .ToList();
+        }
+
+
 
     }
 }
