@@ -55,5 +55,27 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             _context.SaveChanges();
         }
 
+        ///  ================= Entity Helpers method ===========
+        // 6. GetCrewByRole(string role)
+        public IEnumerable<CrewMember> GetCrewByRole(string role)
+        {
+            if (string.IsNullOrEmpty(role))
+            {
+                throw new ArgumentException("Role cannot be null or empty", nameof(role));
+            }
+            return _context.CrewMembers.Where(cm => cm.Role.ToString().Equals(role, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+
+
+        // 7. GetAvailableCrew(DateTime dep) 
+        public IEnumerable<CrewMember> GetAvailableCrew(DateTime dep)
+        {
+           
+            return _context.CrewMembers
+                .Where(cm => !cm.FlightCrews.Any(fc => fc.Flight.DepartureUtc <= dep && fc.Flight.ArrivalUtc >= dep))
+                .ToList();
+        }
+
     }
 }
