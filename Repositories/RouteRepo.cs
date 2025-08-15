@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlightManagementCompany_LINQ_EFCore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
@@ -46,5 +47,19 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             _context.Routes.Remove(route);
             _context.SaveChanges();
         }
+
+        /// // ================= Entity-Specific Helpers ===================
+        // 6. GetRoutesByOriginAndDestination(string origin, string destination)
+        public List<Route> GetRoutesByOriginAndDestinationCity(string originCity, string destinationCity)
+        {
+            originCity = originCity?.Trim();
+            destinationCity = destinationCity?.Trim();
+
+            return _context.Routes.AsNoTracking()
+                .Where(r => r.OriginAirport.City == originCity
+                         && r.DistenationAirport.City == destinationCity)
+                .ToList();
+        }
+
     }
 }
