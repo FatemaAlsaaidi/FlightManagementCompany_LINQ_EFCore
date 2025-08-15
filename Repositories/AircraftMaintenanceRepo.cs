@@ -56,5 +56,24 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         
         }
 
+        /// // ================= Entity-Specific Helpers ===================
+        // 6. GetMaintenancesByAircraftId(int aircraftId)
+        public List<AircraftMaintenance> GetMaintenancesByAircraftId(int aircraftId)
+        {
+            return _context.AircraftMaintenances
+                           .Where(m => m.AircraftId == aircraftId)
+                           .OrderByDescending(m => m.MaintenanceDate)
+                           .ToList();
+        }
+
+       
+
+
+
+
+
+
+
+
     }
 }
