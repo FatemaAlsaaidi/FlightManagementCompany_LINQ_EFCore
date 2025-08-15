@@ -51,7 +51,24 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
            
             _context.Airports.Remove(airport);
             _context.SaveChanges();
-            
+
+        }
+
+        /// // ================= Entity-Specific Helpers ===================
+        // 6. GetAirportsByOrigincityCity(string Origincitycity)
+        public List<Airport> GetAirportsByOriginCity(string Origincity)
+        {
+            return _context.Airports
+                .Where(a => a.City.Equals(Origincity, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        // 7. GetAirportsByDestinationCity(string destinationCity)
+        public List<Airport> GetAirportsByDestinationCity(string destinationCity)
+        {
+            return _context.Airports
+                .Where(a => a.City.Equals(destinationCity, StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
     }
 }
