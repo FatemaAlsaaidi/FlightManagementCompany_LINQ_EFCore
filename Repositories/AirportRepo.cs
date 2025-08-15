@@ -17,23 +17,23 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         }
 
         // 1. GetAll
-        public List<Airport> GetAll()
+        public List<Airport> GetAllAirports()
         {
             return _context.Airports.ToList();
         }
         // 2. GetById
-        public Airport GetById(int id)
+        public Airport GetAirportById(int id)
         {
             return _context.Airports.FirstOrDefault(a => a.AirportId == id);
         }
         // 3. Add
-        public void Add(Airport airport)
+        public void AddAirport(Airport airport)
         {
             _context.Airports.Add(airport);
             _context.SaveChanges();
         }
         // 4. Update
-        public void Update(Airport airport)
+        public void UpdateAirport(Airport airport)
         {
             var existingAirport = _context.Airports.FirstOrDefault(a => a.AirportId == airport.AirportId);
             if (existingAirport != null)
@@ -46,7 +46,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             }
         }
         // 5. Delete
-        public void Delete(Airport airport)
+        public void DeleteAirport(Airport airport)
         {
            
             _context.Airports.Remove(airport);

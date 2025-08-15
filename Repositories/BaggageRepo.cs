@@ -17,23 +17,23 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         }
 
         // GetAll
-        public List<Baggage> GetAll()
+        public List<Baggage> GetAllBaggages()
         {
             return _context.Baggages.ToList();
         }
         // GetById
-        public Baggage GetById(int id)
+        public Baggage GetBaggageById(int id)
         {
             return _context.Baggages.FirstOrDefault(b => b.BaggageId == id);
         }
         // Add
-        public void Add(Baggage baggage)
+        public void AddBaggage(Baggage baggage)
         {
             _context.Baggages.Add(baggage);
             _context.SaveChanges();
         }
         // Update
-        public void Update(Baggage baggage)
+        public void UpdateBaggage(Baggage baggage)
         {
             var existingBaggage = _context.Baggages.FirstOrDefault(b => b.BaggageId == baggage.BaggageId);
             if (existingBaggage != null)
@@ -46,7 +46,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         }
 
         // Delete
-        public void Delete(Baggage baggage)
+        public void DeleteBaggage(Baggage baggage)
         {
            
             _context.Baggages.Remove(baggage);

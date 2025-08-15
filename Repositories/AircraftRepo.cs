@@ -17,33 +17,33 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         }
 
         // 1. GetAll()
-        public List<Aircraft> GetAll()
+        public List<Aircraft> GetAllAircrafts()
         {
             return _context.Aircraft.ToList();
         }
 
         // 2. GetById()
-        public Aircraft GetById(int id)
+        public Aircraft GetAircraftById(int id)
         {
             return _context.Aircraft.Find(id);
         }
 
         // 3. Add()
-        public void Add(Aircraft aircraft)
+        public void AddAircraft(Aircraft aircraft)
         {
             _context.Aircraft.Add(aircraft);
             _context.SaveChanges();
         }
 
         // 4. Update()
-        public void Update(Aircraft aircraft)
+        public void UpdateAircraft(Aircraft aircraft)
         {
             _context.Aircraft.Update(aircraft);
             _context.SaveChanges();
 
         }
         // 5. Delete()
-        public void Delete(Aircraft aircraft)
+        public void DeleteAircraft(Aircraft aircraft)
         {
             _context.Aircraft.Remove(aircraft);
             _context.SaveChanges();
