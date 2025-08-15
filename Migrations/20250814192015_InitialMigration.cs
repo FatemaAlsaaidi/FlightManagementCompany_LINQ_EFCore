@@ -176,24 +176,14 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         principalTable: "Aircraft",
                         principalColumn: "AircraftId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Flights_Aircraft_AircraftId1",
-                        column: x => x.AircraftId1,
-                        principalTable: "Aircraft",
-                        principalColumn: "AircraftId",
-                        onDelete: ReferentialAction.Cascade);
+                    
                     table.ForeignKey(
                         name: "FK_Flights_Routes_RouteId",
                         column: x => x.RouteId,
                         principalTable: "Routes",
                         principalColumn: "RouteId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Flights_Routes_RouteId1",
-                        column: x => x.RouteId1,
-                        principalTable: "Routes",
-                        principalColumn: "RouteId",
-                        onDelete: ReferentialAction.Cascade);
+                    
                 });
 
             migrationBuilder.CreateTable(
