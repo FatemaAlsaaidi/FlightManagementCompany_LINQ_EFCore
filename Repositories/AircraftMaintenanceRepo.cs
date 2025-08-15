@@ -18,73 +18,42 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         }
 
         // 1. GetAll()
-        public void GetAllAircrafMaintenances() 
+        public List<AircraftMaintenance> GetAllAircrafMaintenances() 
         {
-            var aircraftMaintenances = _context.AircraftMaintenances.ToList();
-            foreach (var maintenance in aircraftMaintenances)
-            {
-                Console.WriteLine($"Maintenance ID: {maintenance.MaintenanceId}, Aircraft ID: {maintenance.AircraftId}, Maintenance Date: {maintenance.MaintenanceDate}, Description: {maintenance.Note}");
-            }
+            return _context.AircraftMaintenances.ToList();
+           
         }
 
         // 2. GetById(int id)
-        public void GetAircraftMaintenanceById(int id)
+        public AircraftMaintenance GetAircraftMaintenanceById(int id)
         {
-            var maintenance = _context.AircraftMaintenances.Find(id);
-            if (maintenance != null)
-            {
-                Console.WriteLine($"Maintenance ID: {maintenance.MaintenanceId}, Aircraft ID: {maintenance.AircraftId}, Maintenance Date: {maintenance.MaintenanceDate}, Description: {maintenance.Note}");
-            }
-            else
-            {
-                Console.WriteLine($"No maintenance found with ID: {id}");
-            }
+            return _context.AircraftMaintenances.Find(id);
         }
 
         // 3. Add(entity)
         public void AddAircraftMaintenance(AircraftMaintenance maintenance)
         {
-            if (maintenance != null)
-            {
-                _context.AircraftMaintenances.Add(maintenance);
-                _context.SaveChanges();
-                Console.WriteLine($"Added Maintenance ID: {maintenance.MaintenanceId}, Aircraft ID: {maintenance.AircraftId}");
-            }
-            else
-            {
-                Console.WriteLine("Cannot add null maintenance.");
-            }
+            _context.AircraftMaintenances.Add(maintenance);
+            _context.SaveChanges();
+          
         }
 
         // 4. Update(entity)
         public void UpdateAircraftMaintenance(AircraftMaintenance maintenance)
         {
-            if (maintenance != null)
-            {
-                _context.AircraftMaintenances.Update(maintenance);
-                _context.SaveChanges();
-                Console.WriteLine($"Updated Maintenance ID: {maintenance.MaintenanceId}, Aircraft ID: {maintenance.AircraftId}");
-            }
-            else
-            {
-                Console.WriteLine("Cannot update null maintenance.");
-            }
+          
+            _context.AircraftMaintenances.Update(maintenance);
+            _context.SaveChanges();
+              
         }
 
-        // 5. Delete(int id)
-        public void DeleteAircraftMaintenance(int id)
+        // 5. Delete
+        public void DeleteAircraftMaintenance(AircraftMaintenance maintenance)
         {
-            var maintenance = _context.AircraftMaintenances.Find(id);
-            if (maintenance != null)
-            {
-                _context.AircraftMaintenances.Remove(maintenance);
-                _context.SaveChanges();
-                Console.WriteLine($"Deleted Maintenance ID: {id}");
-            }
-            else
-            {
-                Console.WriteLine($"No maintenance found with ID: {id}");
-            }
+           
+            _context.AircraftMaintenances.Remove(maintenance);
+            _context.SaveChanges();
+        
         }
 
     }
