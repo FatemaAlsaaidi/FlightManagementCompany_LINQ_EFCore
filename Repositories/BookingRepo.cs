@@ -51,5 +51,23 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             
         }
 
+        /// =============== Extra Methods ===============
+        // 6. GetBookingsByDateRange(DateTime from, DateTime to)
+        public List<Booking> GetBookingsByDateRange(DateTime from, DateTime to)
+        {
+            return _context.Bookings
+                .Where(b => b.BookingDate >= from && b.BookingDate <= to)
+                .ToList();
+        }
+
+        // 7. GetBookingsByPassengerId(int passengerId)
+        public List<Booking> GetBookingsByPassengerId(int passengerId)
+        {
+            return _context.Bookings
+                .Where(b => b.PassengerId == passengerId)
+                .ToList();
+        }
+
+
     }
 }
