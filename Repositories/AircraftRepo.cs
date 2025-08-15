@@ -50,5 +50,13 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
         }
 
 
+        /// // ================= Entity-Specific Helpers ===================
+        // 6. GetAircraftDueForMaintenance(DateTime beforeDate) 
+        public List<Aircraft> GetAircraftDueForMaintenance(DateTime beforeDate)
+        {
+            return _context.Aircraft
+                .Where(a => a.AircraftMaintenances.Any(am => am.MaintenanceDate < beforeDate))
+                .ToList();
+        }
     }
 }
