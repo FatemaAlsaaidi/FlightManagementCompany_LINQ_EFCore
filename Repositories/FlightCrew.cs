@@ -51,5 +51,18 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             _context.SaveChanges();
         }
 
+        /// // ================= Entity-Specific Helpers ===================
+        // 6. GetFlightCrewsByFlightId(int flightId)
+        public List<Models.FlightCrew> GetFlightCrewsByFlightId(int flightId)
+        {
+            return _context.FlightCrews.Where(fc => fc.FlightId == flightId).ToList();
+        }
+
+        // 7. GetFlightCrewsByCrewId(int crewId)
+        public List<Models.FlightCrew> GetFlightCrewsByCrewId(int crewId)
+        {
+            return _context.FlightCrews.Where(fc => fc.CrewId == crewId).ToList();
+        }
+
     }
 }
