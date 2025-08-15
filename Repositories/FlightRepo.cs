@@ -51,5 +51,21 @@ namespace FlightManagementCompany_LINQ_EFCore.Repositories
             
         }
 
+        /// ====================== entity Helpers methods ================
+        // 6. GetFlightsByDateRange(DateTime from, DateTime to)
+        public IEnumerable<Flight> GetFlightsByDateRange(DateTime from, DateTime to)
+        {
+            return _context.Flights
+                .Where(f => f.DepartureUtc >= from && f.ArrivalUtc <= to)
+                .ToList();
+        }
+        // 7. GetFlightsByRoute(int routeId)
+        public IEnumerable<Flight> GetFlightsByRoute(int routeId)
+        {
+            return _context.Flights
+                .Where(f => f.RouteId == routeId)
+                .ToList();
+        }
+
     }
 }
