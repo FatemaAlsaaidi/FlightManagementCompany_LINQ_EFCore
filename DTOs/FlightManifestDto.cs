@@ -18,10 +18,11 @@ namespace FlightManagementCompany_LINQ_EFCore.DTOs
         public decimal TotalBaggageKg { get; set; }
         public List<CrewDto> Crew { get; set; } = new();
 
-        public class CrewDto
-        {
-            public string Name { get; set; } = string.Empty; // e.g., "Ali Hamed"
-            public string Role { get; set; } = string.Empty; // e.g., "Pilot", "CoPilot", "FlightAttendant"
-        }
+        
+    }
+    public class CrewDto
+    {
+        public string Name { get; set; } = string.Empty; 
+        public string Role { get; set; } = string.Empty; 
     }
 }
