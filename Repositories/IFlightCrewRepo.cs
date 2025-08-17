@@ -6,7 +6,7 @@
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public interface IFlightCrew
+    public interface IFlightCrewRepo
     {
         void AddFlightCrew(Models.FlightCrew flightCrew);
         void DeleteFlightCrew(Models.FlightCrew flightCrew);

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace FlightManagementCompany_LINQ_EFCore.Repositories
 {
-    public class FlightCrew : IFlightCrew
+    public class FlightCrewRepo : IFlightCrewRepo
     {
         // database injection
         private readonly FlightDatabaseContext _context;
-        public FlightCrew(FlightDatabaseContext context)
+        public FlightCrewRepo(FlightDatabaseContext context)
         {
             _context = context;
         }
