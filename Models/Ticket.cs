@@ -11,17 +11,11 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
 {
     public class Ticket
     {
-        [Key]
         public int TicketId { get; set; }
-        [Required, StringLength(20)]
         public string SeatNumber { get; set; }
-        [Required]
         public decimal Fare { get; set; }
-        [Required]
         public bool CheckedIn { get; set; }
-        [Required]
         public int BookingId { get; set; } // Foreign key to Booking table
-        [Required]
         public int FlightId { get; set; } // Foreign key to Flight table
 
         // navigation to booking 

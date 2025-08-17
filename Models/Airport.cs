@@ -11,26 +11,15 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
 {
     public class Airport
     {
-        [Key]
         public int AirportId { get; set; }
-        [Required, StringLength (20)]
-        public string Name { get; set; }
-        [Required, StringLength(3)]
-        public string IATA { get; set; }
-        [Required, StringLength(20)]
-        public string City { get; set; }
-        [Required, StringLength(20)]
-        public string Country { get; set; }
-        [Required, StringLength(20)]
-        public string TimeZone { get; set; }
+        public string Name { get; set; } = null!;
+        public string IATA { get; set; } = null!;
+        public string City { get; set; } = null!;
+        public string Country { get; set; } = null!;
+        public string TimeZone { get; set; } = null!;
 
-        
-
-
-        [InverseProperty("OriginAirport")]
+        // Keep collection names you already used in mappings
         public ICollection<Route> OriginRoute { get; set; } = new List<Route>();
-
-        [InverseProperty("DistenationAirport")]
         public ICollection<Route> DistenationRoute { get; set; } = new List<Route>();
 
 
