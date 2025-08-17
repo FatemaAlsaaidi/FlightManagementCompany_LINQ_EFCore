@@ -51,7 +51,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Fname = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Lname = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     LicenseNo = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
@@ -134,9 +134,8 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BookingRef = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    PassengerId = table.Column<int>(type: "int", nullable: false),
-                    PassengerId1 = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    PassengerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,8 +146,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         column: x => x.PassengerId,
                         principalTable: "Passengers",
                         principalColumn: "PassengerId",
-                        onDelete: ReferentialAction.Cascade);
-                    
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,9 +160,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     ArrivalUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     RouteId = table.Column<int>(type: "int", nullable: false),
-                    AircraftId = table.Column<int>(type: "int", nullable: false),
-                    AircraftId1 = table.Column<int>(type: "int", nullable: false),
-                    RouteId1 = table.Column<int>(type: "int", nullable: false)
+                    AircraftId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -175,15 +171,13 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         column: x => x.AircraftId,
                         principalTable: "Aircraft",
                         principalColumn: "AircraftId",
-                        onDelete: ReferentialAction.Restrict);
-                    
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Flights_Routes_RouteId",
                         column: x => x.RouteId,
                         principalTable: "Routes",
                         principalColumn: "RouteId",
                         onDelete: ReferentialAction.Restrict);
-                    
                 });
 
             migrationBuilder.CreateTable(
@@ -192,9 +186,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                 {
                     CrewId = table.Column<int>(type: "int", nullable: false),
                     FlightId = table.Column<int>(type: "int", nullable: false),
-                    RoleOnFlight = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FlightId1 = table.Column<int>(type: "int", nullable: false),
-                    CrewMemberCrewId = table.Column<int>(type: "int", nullable: false)
+                    RoleOnFlight = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,15 +197,13 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         column: x => x.CrewId,
                         principalTable: "CrewMembers",
                         principalColumn: "CrewId",
-                        onDelete: ReferentialAction.Cascade);
-                    
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FlightCrews_Flights_FlightId",
                         column: x => x.FlightId,
                         principalTable: "Flights",
                         principalColumn: "FlightId",
                         onDelete: ReferentialAction.Cascade);
-                    
                 });
 
             migrationBuilder.CreateTable(
@@ -226,9 +216,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     Fare = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CheckedIn = table.Column<bool>(type: "bit", nullable: false),
                     BookingId = table.Column<int>(type: "int", nullable: false),
-                    FlightId = table.Column<int>(type: "int", nullable: false),
-                    BookingId1 = table.Column<int>(type: "int", nullable: false),
-                    FlightId1 = table.Column<int>(type: "int", nullable: false)
+                    FlightId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -239,15 +227,13 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         column: x => x.BookingId,
                         principalTable: "Bookings",
                         principalColumn: "BookingId",
-                        onDelete: ReferentialAction.Cascade);
-                   
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tickets_Flights_FlightId",
                         column: x => x.FlightId,
                         principalTable: "Flights",
                         principalColumn: "FlightId",
                         onDelete: ReferentialAction.Restrict);
-                    
                 });
 
             migrationBuilder.CreateTable(
@@ -258,8 +244,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     WeightKg = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TagNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    TicketId = table.Column<int>(type: "int", nullable: false),
-                    TicketId1 = table.Column<int>(type: "int", nullable: false)
+                    TicketId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -270,7 +255,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         principalTable: "Tickets",
                         principalColumn: "TicketId",
                         onDelete: ReferentialAction.Cascade);
-                    
+                   
                 });
 
             migrationBuilder.CreateIndex(
@@ -295,7 +280,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                 table: "Baggages",
                 column: "TicketId");
 
-            
+          
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_BookingRef",
@@ -308,37 +293,25 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                 table: "Bookings",
                 column: "PassengerId");
 
-          
             migrationBuilder.CreateIndex(
                 name: "IX_FlightCrews_CrewId",
                 table: "FlightCrews",
                 column: "CrewId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FlightCrews_CrewMemberCrewId",
-                table: "FlightCrews",
-                column: "CrewMemberCrewId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FlightCrews_FlightId",
                 table: "FlightCrews",
                 column: "FlightId");
-
-           
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flights_AircraftId",
                 table: "Flights",
                 column: "AircraftId");
 
-           
-
             migrationBuilder.CreateIndex(
                 name: "IX_Flights_RouteId",
                 table: "Flights",
                 column: "RouteId");
-
-            
 
             migrationBuilder.CreateIndex(
                 name: "IX_Passengers_PassportNo",
@@ -361,13 +334,10 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                 table: "Tickets",
                 column: "BookingId");
 
-
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_FlightId",
                 table: "Tickets",
                 column: "FlightId");
-
-          
         }
 
         /// <inheritdoc />

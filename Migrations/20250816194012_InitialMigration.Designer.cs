@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightManagementCompany_LINQ_EFCore.Migrations
 {
     [DbContext(typeof(FlightDatabaseContext))]
-    [Migration("20250814192015_InitialMigration")]
+    [Migration("20250816194012_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -140,11 +140,11 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TicketId1")
+                    b.Property<int?>("TicketId1")
                         .HasColumnType("int");
 
                     b.Property<decimal>("WeightKg")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("BaggageId");
 
@@ -174,13 +174,11 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     b.Property<int>("PassengerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PassengerId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Status");
 
                     b.HasKey("BookingId");
 
@@ -188,8 +186,6 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         .IsUnique();
 
                     b.HasIndex("PassengerId");
-
-                    b.HasIndex("PassengerId1");
 
                     b.ToTable("Bookings", t =>
                         {
@@ -222,8 +218,8 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("CrewId");
 
@@ -244,9 +240,6 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     b.Property<int>("AircraftId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AircraftId1")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("ArrivalUtc")
                         .HasColumnType("datetime2");
 
@@ -261,9 +254,6 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RouteId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -273,11 +263,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
 
                     b.HasIndex("AircraftId");
 
-                    b.HasIndex("AircraftId1");
-
                     b.HasIndex("RouteId");
-
-                    b.HasIndex("RouteId1");
 
                     b.ToTable("Flights", t =>
                         {
@@ -293,25 +279,16 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     b.Property<int>("CrewId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CrewMemberCrewId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FlightId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("RoleOnFlight")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("FlightId", "CrewId");
 
                     b.HasIndex("CrewId");
 
-                    b.HasIndex("CrewMemberCrewId");
-
                     b.HasIndex("FlightId");
-
-                    b.HasIndex("FlightId1");
 
                     b.ToTable("FlightCrews", t =>
                         {
@@ -395,9 +372,6 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BookingId1")
-                        .HasColumnType("int");
-
                     b.Property<bool>("CheckedIn")
                         .HasColumnType("bit");
 
@@ -405,9 +379,6 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("FlightId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FlightId1")
                         .HasColumnType("int");
 
                     b.Property<string>("SeatNumber")
@@ -419,11 +390,7 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
 
                     b.HasIndex("BookingId");
 
-                    b.HasIndex("BookingId1");
-
                     b.HasIndex("FlightId");
-
-                    b.HasIndex("FlightId1");
 
                     b.ToTable("Tickets", t =>
                         {
@@ -437,70 +404,55 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         .WithMany("AircraftMaintenances")
                         .HasForeignKey("AircraftId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_AircraftMaintenances_Aircraft_AircraftId");
 
                     b.Navigation("Aircraft");
                 });
 
             modelBuilder.Entity("FlightManagementCompany_LINQ_EFCore.Models.Baggage", b =>
                 {
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Ticket", null)
+                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Ticket", "Ticket")
                         .WithMany()
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Baggages_Tickets_TicketId");
 
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Ticket", "Ticket")
+                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Ticket", null)
                         .WithMany("Baggages")
-                        .HasForeignKey("TicketId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TicketId1");
 
                     b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("FlightManagementCompany_LINQ_EFCore.Models.Booking", b =>
                 {
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Passenger", null)
-                        .WithMany()
-                        .HasForeignKey("PassengerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Passenger", "Passenger")
                         .WithMany("Bookings")
-                        .HasForeignKey("PassengerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PassengerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Bookings_Passengers_PassengerId");
 
                     b.Navigation("Passenger");
                 });
 
             modelBuilder.Entity("FlightManagementCompany_LINQ_EFCore.Models.Flight", b =>
                 {
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Aircraft", null)
-                        .WithMany()
-                        .HasForeignKey("AircraftId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Aircraft", "Aircraft")
                         .WithMany("Flights")
-                        .HasForeignKey("AircraftId1")
+                        .HasForeignKey("AircraftId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Route", null)
-                        .WithMany()
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Flights_Aircraft_AircraftId");
 
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Route", "Route")
                         .WithMany("Flights")
-                        .HasForeignKey("RouteId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Flights_Routes_RouteId");
 
                     b.Navigation("Aircraft");
 
@@ -509,29 +461,19 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
 
             modelBuilder.Entity("FlightManagementCompany_LINQ_EFCore.Models.FlightCrew", b =>
                 {
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.CrewMember", null)
-                        .WithMany()
-                        .HasForeignKey("CrewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.CrewMember", "CrewMember")
                         .WithMany("FlightCrews")
-                        .HasForeignKey("CrewMemberCrewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Flight", null)
-                        .WithMany()
-                        .HasForeignKey("FlightId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CrewId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_FlightCrews_CrewMembers_CrewId");
 
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Flight", "Flight")
                         .WithMany("FlightCrews")
-                        .HasForeignKey("FlightId1")
+                        .HasForeignKey("FlightId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_FlightCrews_Flights_FlightId");
 
                     b.Navigation("CrewMember");
 
@@ -544,13 +486,15 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
                         .WithMany("DistenationRoute")
                         .HasForeignKey("DestinationAirportId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Routes_Airports_DestinationAirportId");
 
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Airport", "OriginAirport")
                         .WithMany("OriginRoute")
                         .HasForeignKey("OriginAirportId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Routes_Airports_OriginAirportId");
 
                     b.Navigation("DistenationAirport");
 
@@ -559,29 +503,19 @@ namespace FlightManagementCompany_LINQ_EFCore.Migrations
 
             modelBuilder.Entity("FlightManagementCompany_LINQ_EFCore.Models.Ticket", b =>
                 {
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Booking", "Booking")
                         .WithMany("Tickets")
-                        .HasForeignKey("BookingId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Flight", null)
-                        .WithMany()
-                        .HasForeignKey("FlightId")
+                        .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Tickets_Bookings_BookingId");
 
                     b.HasOne("FlightManagementCompany_LINQ_EFCore.Models.Flight", "Flight")
                         .WithMany("Tickets")
-                        .HasForeignKey("FlightId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FlightId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Tickets_Flights_FlightId");
 
                     b.Navigation("Booking");
 
