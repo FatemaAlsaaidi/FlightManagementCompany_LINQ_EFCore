@@ -496,3 +496,4 @@ select new
 }
 
 ```
+![](img/TRR2.JPG)
