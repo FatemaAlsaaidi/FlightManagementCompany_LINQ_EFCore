@@ -244,38 +244,13 @@ WHERE CAST(f.DepartureUtc AS date) = @day
 ***DTO***
 
 ``` sql
-public class FlightManifestDto
-{
-    public string FlightNumber { get; set; } = string.Empty;
-    public string OriginIATA { get; set; } = string.Empty;      // IATA of origin
-    public string DestinationIATA { get; set; } = string.Empty;      // IATA of destination
-    public DateTime DepUtc { get; set; }
-    public DateTime ArrUtc { get; set; }
-    public string AircraftTail { get; set; } = string.Empty;
-    public int PassengerCount { get; set; }
-    public decimal TotalBaggageKg { get; set; }
-    public List<CrewDto> Crew { get; set; } = new();
-
-    
-}
-public class CrewDto
-{
-    public string Name { get; set; } = string.Empty; 
-    public string Role { get; set; } = string.Empty; 
-}
-
-```
-***CSharp Queqy***
-
-``` sql
-
 public List<FlightManifestDto> DailyFlightManifest(DateTime dayUtcOrLocal)
 {
-   
+
 
     // 1.)Pre-filter flights to the day window to keep joins small
     var flightsOfDay = _flightRepo.GetAllFlights()
-        .Where(f => f.DepartureUtc >= dayUtcOrLocal);
+        .Where(f => f.DepartureUtc == dayUtcOrLocal);
 
     // 2) LINQ chain equivalent to your SQL
     var manifest =
@@ -384,7 +359,6 @@ public List<FlightManifestDto> DailyFlightManifest(DateTime dayUtcOrLocal)
 
     return manifest;
 }
-
 
 ```
 ![](img/DFM2.JPG)
