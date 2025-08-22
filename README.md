@@ -153,6 +153,15 @@ The database is already in 3NF because:
 
 ## Models
 
+## Database Context with Fluent API
+
+## Migration 
+
+
+## Database Digram
+
+![](img/DBDigram.JPG)
+
 ## Models Repositeries
 
 ## Models Services
