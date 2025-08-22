@@ -242,7 +242,29 @@ WHERE CAST(f.DepartureUtc AS date) = @day
 ![](img/DFM.JPG)
 
 ***DTO***
+```sql
+public class FlightManifestDto
+{
+    public string FlightNumber { get; set; } = string.Empty;
+    public string OriginIATA { get; set; } = string.Empty;      // IATA of origin
+    public string DestinationIATA { get; set; } = string.Empty;      // IATA of destination
+    public DateTime DepUtc { get; set; }
+    public DateTime ArrUtc { get; set; }
+    public string AircraftTail { get; set; } = string.Empty;
+    public int PassengerCount { get; set; }
+    public decimal TotalBaggageKg { get; set; }
+    public List<CrewDto> Crew { get; set; } = new();
 
+    
+}
+public class CrewDto
+{
+    public string Name { get; set; } = string.Empty; 
+    public string Role { get; set; } = string.Empty; 
+}
+```
+
+***C# query***
 ``` sql
 public List<FlightManifestDto> DailyFlightManifest(DateTime dayUtcOrLocal)
 {
@@ -250,7 +272,7 @@ public List<FlightManifestDto> DailyFlightManifest(DateTime dayUtcOrLocal)
 
     // 1.)Pre-filter flights to the day window to keep joins small
     var flightsOfDay = _flightRepo.GetAllFlights()
-        .Where(f => f.DepartureUtc == dayUtcOrLocal);
+        .Where(f => f.DepartureUtc >= dayUtcOrLocal);
 
     // 2) LINQ chain equivalent to your SQL
     var manifest =
@@ -362,5 +384,115 @@ public List<FlightManifestDto> DailyFlightManifest(DateTime dayUtcOrLocal)
 
 ```
 ![](img/DFM2.JPG)
-  
 
+### 2.Top Routes by Revenue 
+  
+- For a date range, compute revenue per route (sum of ticket fares), ordered descending; include 
+number of seats sold and average fare.
+ 
+- Use GroupBy and projection.
+
+***sql query***
+```sql
+DECLARE @day2   datetime2 = '2025-08-17';  
+
+SELECT
+    r.RouteId,
+    ao.IATA AS OriginIATA,
+    ad.IATA AS DestIATA,
+    r.DistanceKm,
+    CONCAT(ao.Country, ' : ', ad.Country) AS RouteCountries,
+    SUM(t.Fare) AS Revenue,
+    COUNT(DISTINCT t.TicketId) AS SeatsSold,
+    AVG(CAST(t.Fare AS decimal(18,2))) AS AverageFare
+FROM Flights f
+JOIN Routes   r  ON r.RouteId      = f.RouteId
+JOIN Airports ao ON ao.AirportId   = r.OriginAirportId
+JOIN Airports ad ON ad.AirportId   = r.DestinationAirportId
+JOIN Tickets  t  ON t.FlightId     = f.FlightId
+
+WHERE CAST(f.DepartureUtc AS date) = @day2
+
+GROUP BY
+    r.RouteId, ao.IATA, ad.IATA, r.DistanceKm, ao.Country, ad.Country
+ORDER BY
+    Revenue DESC;  
+
+```
+![](img/TRR.JPG)
+
+***DTO***
+```sql
+public class RouteRevenueDto
+{
+    public int RouteId { get; set; }
+    public string OriginIATA { get; set; } = string.Empty;      // Origin IATA
+    public string DestinationIATA { get; set; } = string.Empty;      // Destination IATA
+    public decimal Revenue { get; set; }                      // Sum of fares
+    public decimal DistanceKm { get; set; }                     // Distance in kilometers
+    public int SeatsSold { get; set; }                      // Count of tickets
+    public string RouteCountries { get; set; } = string.Empty; // Comma-separated list of countries for the route
+    public decimal AvgFare { get; set; }                      // Revenue / SeatsSold
+}
+```
+
+***
+
+***C# query***
+```sql
+public List<RouteRevenueDto> GetTopRoutesByRevenue(DateTime date, int topN)
+{
+    var flightsInRange = _flightRepo.GetAllFlights()
+        .Where(f => f.DepartureUtc >= date);
+
+    var query =
+from f in flightsInRange
+join r in _routeRepo.GetAllRoutes() on f.RouteId equals r.RouteId
+join ao in _airportRepo.GetAllAirports() on r.OriginAirportId equals ao.AirportId
+join ad in _airportRepo.GetAllAirports() on r.DestinationAirportId equals ad.AirportId
+join t in _ticketRepo.GetAllTickets() on f.FlightId equals t.FlightId
+select new
+{
+    r.RouteId,
+    OriginIATA = ao.IATA,
+    DestIATA = ad.IATA,
+    ao.Country,
+    DestCountry = ad.Country,
+    r.DistanceKm,
+    t.TicketId,
+    t.Fare
+};
+
+    // 3) GroupBy route + projection to DTO
+    var byRoute = query
+        .GroupBy(x => new
+        {
+            x.RouteId,
+            x.OriginIATA,
+            x.DestIATA,
+            x.Country,
+            x.DestCountry,
+            x.DistanceKm
+        })
+        .Select(g => new RouteRevenueDto
+        {
+            RouteId = g.Key.RouteId,
+            OriginIATA = g.Key.OriginIATA,
+            DestinationIATA = g.Key.DestIATA,
+            DistanceKm = g.Key.DistanceKm,
+            RouteCountries = g.Key.Country + " : " + g.Key.DestCountry,
+
+            Revenue = g.Sum(x => x.Fare),
+            // Seats sold = Number of tickets (Distinct for safety if duplicate join occurs)
+            SeatsSold = g.Select(x => x.TicketId).Distinct().Count(), // projection part
+
+            AvgFare = g.Average(x => x.Fare)
+        })
+        .OrderByDescending(x => x.Revenue)
+        .Take(topN)
+        .ToList();
+
+    return byRoute;
+}
+
+```
