@@ -19,5 +19,14 @@ namespace FlightManagementCompany_LINQ_EFCore.DTOs
 
         // Convenience computed property
         public double OnTimePercent => Flights == 0 ? 0 : (OnTime * 100.0) / Flights;
+
+        public RouteDto Route { get; set; } = new(); // Route information
+    }
+    public class RouteDto
+    {
+        public string OriginIATA { get; set; } = string.Empty;      // Origin IATA
+        public string DestinationIATA { get; set; } = string.Empty;      // Destination IATA
+
+
     }
 }
