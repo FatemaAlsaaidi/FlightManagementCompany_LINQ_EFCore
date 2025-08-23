@@ -9,8 +9,8 @@ namespace FlightManagementCompany_LINQ_EFCore.DTOs
     public class FlightManifestDto
     {
         public string FlightNumber { get; set; } = string.Empty;
-        public string Origin { get; set; } = string.Empty;      // IATA of origin
-        public string Destination { get; set; } = string.Empty;      // IATA of destination
+        public string OriginIATA { get; set; } = string.Empty;      // IATA of origin
+        public string DestinationIATA { get; set; } = string.Empty;      // IATA of destination
         public DateTime DepUtc { get; set; }
         public DateTime ArrUtc { get; set; }
         public string AircraftTail { get; set; } = string.Empty;
