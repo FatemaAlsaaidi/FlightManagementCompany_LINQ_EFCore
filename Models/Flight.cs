@@ -14,6 +14,8 @@ namespace FlightManagementCompany_LINQ_EFCore.Models
         public string FlightNumber { get; set; } = null!;
         public DateTime DepartureUtc { get; set; }
         public DateTime ArrivalUtc { get; set; }
+        public DateTime? ActualArrivalUtc { get; set; }
+
         public string Status { get; set; } = null!; // "Scheduled", etc.
 
         public int RouteId { get; set; }
