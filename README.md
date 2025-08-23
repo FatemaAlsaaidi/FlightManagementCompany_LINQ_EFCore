@@ -272,7 +272,7 @@ public List<FlightManifestDto> DailyFlightManifest(DateTime dayUtcOrLocal)
 
     // 1.)Pre-filter flights to the day window to keep joins small
     var flightsOfDay = _flightRepo.GetAllFlights()
-        .Where(f => f.DepartureUtc >= dayUtcOrLocal);
+        .Where(f => f.DepartureUtc.Date == dayUtcOrLocal.Date);
 
     // 2) LINQ chain equivalent to your SQL
     var manifest =
@@ -443,7 +443,7 @@ public class RouteRevenueDto
 public List<RouteRevenueDto> GetTopRoutesByRevenue(DateTime date, int topN)
 {
     var flightsInRange = _flightRepo.GetAllFlights()
-        .Where(f => f.DepartureUtc >= date);
+        .Where(f => f.DepartureUtc.Date >= date.Date);
 
     var query =
 from f in flightsInRange
@@ -497,3 +497,124 @@ select new
 
 ```
 ![](img/TRR2.JPG)
+
+### 3. On-Time Performance
+
+***sql server query***
+```sql
+DECLARE @FromUtc datetime2 = '2025-08-23';
+DECLARE @ToUtc   datetime2 = '2025-08-24';
+DECLARE @ThresholdMinutes int = 5;
+
+SELECT
+    r.RouteId,
+    ao.IATA AS OriginIATA,
+    ad.IATA AS DestIATA,
+    COUNT(*) AS Flights,
+    SUM(CASE
+            WHEN f.ActualArrivalUtc IS NOT NULL
+             AND DATEDIFF(MINUTE, f.ArrivalUtc, f.ActualArrivalUtc) <= @ThresholdMinutes
+            THEN 1 ELSE 0
+        END) AS OnTime,
+    CAST(
+        SUM(CASE
+                WHEN f.ActualArrivalUtc IS NOT NULL
+                 AND DATEDIFF(MINUTE, f.ArrivalUtc, f.ActualArrivalUtc) <= @ThresholdMinutes
+                THEN 1 ELSE 0
+            END) * 100.0 / NULLIF(COUNT(*), 0)
+        AS decimal(5,2)
+    ) AS OnTimePercent
+FROM Flights f
+JOIN Routes   r  ON r.RouteId = f.RouteId
+JOIN Airports ao ON ao.AirportId = r.OriginAirportId
+JOIN Airports ad ON ad.AirportId = r.DestinationAirportId
+WHERE f.DepartureUtc >= @FromUtc
+  AND f.DepartureUtc <  @ToUtc
+GROUP BY r.RouteId, ao.IATA, ad.IATA
+ORDER BY OnTimePercent DESC;
+
+```
+
+![](img/OTP.JPG)
+
+***DTO***
+```sql
+ public class OnTimePerformanceDto
+ {
+     // Grouping key, e.g. "MCT->DXB" (per route) or any label you choose
+     public string Key { get; set; } = string.Empty;
+
+     // How many flights in the group
+     public int Flights { get; set; }
+
+     // How many were on time (within threshold minutes)
+     public int OnTime { get; set; }
+
+     // Convenience computed property
+     public double OnTimePercent => Flights == 0 ? 0 : (OnTime * 100.0) / Flights;
+
+     public RouteDto Route { get; set; } = new(); // Route information
+ }
+ public class RouteDto
+ {
+     public string OriginIATA { get; set; } = string.Empty;      // Origin IATA
+     public string DestinationIATA { get; set; } = string.Empty;      // Destination IATA
+
+
+ }
+```
+
+***C# Query***
+
+```sql
+ublic List<OnTimePerformanceDto> GetOnTimePerformanceByRoute(
+    DateTime fromUtc, DateTime toUtc, int thresholdMinutes)
+        {
+            var flightsInRange = _flightRepo.GetAllFlights()
+                .Where(f => f.DepartureUtc >= fromUtc && f.DepartureUtc < toUtc);
+
+            var q =
+                from f in flightsInRange
+                join r in _routeRepo.GetAllRoutes() on f.RouteId equals r.RouteId
+                join ao in _airportRepo.GetAllAirports() on r.OriginAirportId equals ao.AirportId
+                join ad in _airportRepo.GetAllAirports() on r.DestinationAirportId equals ad.AirportId
+                select new
+                {
+                    r.RouteId,
+                    OriginIATA = ao.IATA,
+                    DestIATA = ad.IATA,
+                    ScheduledArrival = f.ArrivalUtc,        // المجدول
+                    ActualArrival = f.ActualArrivalUtc   // الفعلي (nullable)
+                };
+
+            var result =
+                q.GroupBy(x => new { x.RouteId, x.OriginIATA, x.DestIATA })
+                 .Select(g =>
+                 {
+                     var flightsCount = g.Count();
+
+                     var onTimeCount = g.Count(x =>
+                         x.ActualArrival != null &&
+                         (x.ActualArrival.Value - x.ScheduledArrival).TotalMinutes <= thresholdMinutes
+                     );
+
+                     return new OnTimePerformanceDto
+                     {
+                         Route = new RouteDto
+                         {
+                             OriginIATA = g.Key.OriginIATA,
+                             DestinationIATA = g.Key.DestIATA
+                         },
+                         Flights = flightsCount,
+                         OnTime = onTimeCount
+                        
+                     };
+                 })
+                 .OrderByDescending(x => x.OnTimePercent)  
+                 .ToList();
+
+            return result;
+        }
+
+```
+![](img/OTP2.JPG)
