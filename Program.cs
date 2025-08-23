@@ -17,83 +17,71 @@ namespace FlightManagementCompany_LINQ_EFCore
         {
             await using var db = new FlightDatabaseContext();
 
-            // DEV reset (optional)
-            // await db.Database.EnsureDeletedAsync();
+            //DEV reset(optional)
+             await db.Database.EnsureDeletedAsync();
 
-            //await db.Database.MigrateAsync();
+            await db.Database.MigrateAsync();
 
-            //// ---- Repositories wired to the same DbContext ----
-            //var airportRepo = new AirportRepo(db);
-            //var routeRepo = new RouteRepo(db);
-            //var aircraftRepo = new AircraftRepo(db);
-            //var flightRepo = new FlightRepo(db);
-            //var passengerRepo = new PassengerRepo(db);
-            //var bookingRepo = new BookingRepo(db);
-            //var ticketRepo = new TicketRepo(db);
-            //var baggageRepo = new BaggageRepo(db);
-            //var crewRepo = new CrewMemberRepo(db);
-            //var flightCrewRepo = new FlightCrewRepo(db);
-            //var maintenanceRepo = new AircraftMaintenanceRepo(db);
+            // ---- Repositories wired to the same DbContext ----
+            var airportRepo = new AirportRepo(db);
+            var routeRepo = new RouteRepo(db);
+            var aircraftRepo = new AircraftRepo(db);
+            var flightRepo = new FlightRepo(db);
+            var passengerRepo = new PassengerRepo(db);
+            var bookingRepo = new BookingRepo(db);
+            var ticketRepo = new TicketRepo(db);
+            var baggageRepo = new BaggageRepo(db);
+            var crewRepo = new CrewMemberRepo(db);
+            var flightCrewRepo = new FlightCrewRepo(db);
+            var maintenanceRepo = new AircraftMaintenanceRepo(db);
 
-            //try
-            //{
-
-
-            //    DatabaseSeeder.CreateSampleData(
-            //         db,                     
-            //         airportRepo,
-            //         routeRepo,
-            //         aircraftRepo,
-            //         flightRepo,
-            //         passengerRepo,
-            //         bookingRepo,
-            //         ticketRepo,
-            //         baggageRepo,
-            //         crewRepo,
-            //         flightCrewRepo,
-            //         maintenanceRepo
-            //        );
+            try
+            {
 
 
-            //    Console.ForegroundColor = ConsoleColor.Green;
-            //    Console.WriteLine("Seed done");
-            //    Console.ResetColor();
+                DatabaseSeeder.CreateSampleData(
+                     db,
+                     airportRepo,
+                     routeRepo,
+                     aircraftRepo,
+                     flightRepo,
+                     passengerRepo,
+                     bookingRepo,
+                     ticketRepo,
+                     baggageRepo,
+                     crewRepo,
+                     flightCrewRepo,
+                     maintenanceRepo
+                    );
 
 
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Seed done");
+                Console.ResetColor();
 
 
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.ForegroundColor = ConsoleColor.Red;
-            //    Console.WriteLine($"Seeding failed: {ex.Message}");
-            //    Console.ResetColor();
-            //    Console.WriteLine(ex); // full stack for debugging
-            //}
 
- /// =====================================================================
+
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Seeding failed: {ex.Message}");
+                Console.ResetColor();
+                Console.WriteLine(ex); // full stack for debugging
+            }
+
+            /// =====================================================================
             // 1) One context for everything in this console run
-            using var context = new FlightDatabaseContext();
 
             // 2) Apply migrations (creates DB if missing). Prefer this over EnsureCreated().
-            await context.Database.MigrateAsync();
 
             // 3) (Optional) Seed once
             // await SeedData.DatabaseSeeder.SeedAsync(context);
 
             // 4) Build repositories (concrete classes, not interfaces)
-            var airportRepo = new AirportRepo(context);
-            var routeRepo = new RouteRepo(context);
-            var aircraftRepo = new AircraftRepo(context);
-            var flightRepo = new FlightRepo(context);
-            var passengerRepo = new PassengerRepo(context);
-            var bookingRepo = new BookingRepo(context);
-            var ticketRepo = new TicketRepo(context);
-            var baggageRepo = new BaggageRepo(context);
-            var crewRepo = new CrewMemberRepo(context);
-            var flightCrewRepo = new FlightCrewRepo(context);
-            var maintenanceRepo = new AircraftMaintenanceRepo(context);
+           
 
             // 5) Create the analytics service (constructor arg order must match your class!)
              var svc = new FlightAnalyticsService(
@@ -145,22 +133,21 @@ namespace FlightManagementCompany_LINQ_EFCore
                 {
                     case "1":
                         {
-                            var Date1 = ReadDate("Enter 'From' date (YYYY-MM-DD) [UTC/local]: ");
-                            var Date2 = ReadDate("Enter 'To' date (YYYY-MM-DD) [UTC/local]: ");
+                            var Date = ReadDate("Enter date (YYYY-MM-DD) [UTC/local]: ");
 
 
-                            var list = svc.DailyFlightManifest(Date1, Date2);
-                            PrintTitle($"Daily Flight Manifest from ({Date1:yyyy-MM-dd}) To ({Date2:yyyy-MM-dd}) ");
+                            var list = svc.DailyFlightManifest(Date);
+                            PrintTitle($"Daily Flight Manifest ({Date:yyyy-MM-dd}) ");
                             PrintManifest(list);
                             return true;
                         }
 
                     case "2":
                         {
-                            var (fromUtc, toUtc) = ReadDateRange();
+                            var date = ReadDate("Enter date (YYYY-MM-DD) [UTC/local]: ");
                             var topN = ReadInt("Top N (or 0 for all): ", allowZero: true);
-                            var list = svc.GetTopRoutesByRevenue(fromUtc, toUtc, topN == 0 ? (int?)null : topN);
-                            PrintTitle($"Top Routes by Revenue ({fromUtc:yyyy-MM-dd} → {toUtc:yyyy-MM-dd})");
+                            var list = svc.GetTopRoutesByRevenue( date, topN);
+                            PrintTitle($"Top Routes by Revenue ({date:yyyy-MM-dd}");
                             PrintRouteRevenue(list);
                             return true;
                         }
@@ -290,33 +277,23 @@ namespace FlightManagementCompany_LINQ_EFCore
                             Console.WriteLine($"Except:    [{string.Join(", ", except)}]");
                             Console.WriteLine("Page:");
                             foreach (var x in page)
-                                Console.WriteLine($"  {x.FlightNumber,-8} {x.Origin}->{x.Destination}  {x.DepUtc:HH:mm}→{x.ArrUtc:HH:mm}");
+                                Console.WriteLine($"  {x.FlightNumber,-8} {x.OriginIATA}->{x.DestinationIATA}  {x.DepUtc:HH:mm}→{x.ArrUtc:HH:mm}");
                             Console.WriteLine();
                             return true;
                         }
 
                     case "12":
                         {
-                            Console.Write("Enter from date (YYYY-MM-DD): ");
+                            Console.Write("Enter date (YYYY-MM-DD): ");
                             if (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd",
-                                CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var fromDate))
+                                CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var Date0))
                             {
                                 Console.WriteLine("Invalid date format.");
                                 return true;
                             }
 
-                            Console.Write("Enter to date (YYYY-MM-DD): ");
-                            if (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd",
-                                CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var toDate))
-                            {
-                                Console.WriteLine("Invalid date format.");
-                                return true;
-                            }
-
-                            // Optional: ensure from <= to
-                            if (toDate < fromDate) (fromDate, toDate) = (toDate, fromDate);
-
-                            var (byNumber, topRoutes, enumerable, onlyTickets) = svc.ConversionOperatorsDemo(fromDate, toDate);
+                            
+                            var (byNumber, topRoutes, enumerable, onlyTickets) = svc.ConversionOperatorsDemo(Date0);
 
                             PrintTitle("Conversion Operators");
                             Console.WriteLine($"ToDictionary(by number): {byNumber.Count}");
@@ -433,7 +410,7 @@ namespace FlightManagementCompany_LINQ_EFCore
 
                 foreach (var f in list)
                 {
-                    Console.WriteLine($"{f.FlightNumber,-8}  {f.Origin}->{f.Destination}  {f.DepUtc:HH:mm}→{f.ArrUtc:HH:mm}  Tail:{f.AircraftTail}");
+                    Console.WriteLine($"{f.FlightNumber,-8}  {f.OriginIATA}->{f.DestinationIATA}  {f.DepUtc:HH:mm}→{f.ArrUtc:HH:mm}  Tail:{f.AircraftTail}");
                     Console.WriteLine($"  Pax: {f.PassengerCount,3} | Bags: {f.TotalBaggageKg,6:N1} kg");
                     if (f.Crew?.Count > 0)
                         Console.WriteLine("  Crew: " + string.Join(", ", f.Crew.Select(c => $"{c.Name} ({c.Role})")));
@@ -445,7 +422,7 @@ namespace FlightManagementCompany_LINQ_EFCore
             {
                 if (list.Count == 0) { Console.WriteLine("(no data)\n"); return; }
                 foreach (var r in list)
-                    Console.WriteLine($"{r.Origin}->{r.Destination}  Seats:{r.SeatsSold,3}  Rev:{r.Revenue,10:C}  Avg:{r.AvgFare,8:C}");
+                    Console.WriteLine($"{r.OriginIATA}->{r.DestinationIATA}  Seats:{r.SeatsSold,3}  Rev:{r.Revenue,10:C}  Avg:{r.AvgFare,8:C}");
                 Console.WriteLine();
             }
 
